@@ -1,30 +1,35 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
+#include <cstring>
 using namespace std;
-int arr[10000];
-bool cmp(int a, int b) {return a > b;}
 int main() {
-    int k, n, flag = 0;
-    cin >> k;
-    vector<int> v(k);
-    for (int i = 0; i < k; i++) {
-        cin >> n;
-        v[i] = n;
-        while (n != 1) {
-            if (n % 2 != 0) n = 3 * n + 1;
-            n = n / 2;
-            if (arr[n] == 1) break;
-            arr[n] = 1;
+    int n, m[101];
+    cin >> n;
+    memset(m, 0, sizeof(m));
+    for (int i = 0; i < n; i++) {
+        int idx;
+        cin >> idx;
+        m[idx] = 1;
+    }
+    for (int i = 1; i <= 100; i++) {
+        if (m[i] == 0)
+            continue;
+        int t = i;
+        while (t != 1) {
+            if (t & 1)
+                t = (3 * t + 1) >> 1;
+            else
+                t >>= 1;
+            if (t <= 100)
+                m[t] = 0;
         }
     }
-    sort(v.begin(), v.end(), cmp);
-    for (int i = 0; i < v.size(); i++) {
-        if (arr[v[i]] == 0) {
-            if (flag == 1) cout << " ";
-            cout << v[i];
-            flag = 1;
-        }
-    }
+    vector<int> ret;
+    for (int i = 100; i >= 1; i--)
+        if (m[i] == 1)
+            ret.push_back(i);
+    for (int i = 0; i < ret.size() - 1; i++)
+        cout << ret[i] << ' ';
+    cout << ret[ret.size()-1];
     return 0;
 }
